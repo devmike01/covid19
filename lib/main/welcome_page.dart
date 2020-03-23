@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:covid19/main/question_page.dart';
 import 'package:covid19/utils/apppreference.dart';
 import 'package:covid19/utils/menus.dart';
 import 'package:covid19/utils/myhtmlparser.dart';
@@ -8,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
+
 //import 'package:html/parser.dart' as parser;
 
 class DashboardPage extends StatefulWidget {
@@ -36,31 +39,47 @@ class DashboardPageState extends State<DashboardPage> {
   List<String> count = new List();
   final titles = new List();
 
+  List<String> otherCount = new List();
+  final otherTitles = new List();
+  bool isError = false;
+
   @override
   void initState() {
     _appPreference.getUsername().then((data) {
       this._username = data;
     });
 
+    int index =0;
     http.get("http://covid19.ncdc.gov.ng/").then((response) {
       //final pResponse = parser.parse(response.body);
       //final nme = pResponse.body.children.first;
       var doc = parse(response.body);
-
+      isError = response.statusCode > 200;
       //class="col-md-5 col-sm-5 col-xs-12"
-      var elements = doc.querySelector("div.col-md-5").querySelectorAll("td");
 
+      var elements = doc.querySelector("div.col-md-5").querySelectorAll("td");
       elements.forEach((el) {
         var regex = RegExp("\\d");
-        String result = el.text;
-        if (regex.hasMatch(result)) {
-          count.add(result.trim());
-        } else {
+        String result = el.text.trim();
+
+        if (Utils.isAState(result)) {
+          print("STATES: $result");
           titles.add(result);
+        } else if (regex.hasMatch(result)) {
+          count.add(result);
+        }else if(Utils.isOthers(result)) {
+          otherTitles.add(result);
         }
-        setState(() {});
         // }
       });
+
+      setState(() {
+        print("SIZE##1: ${otherTitles.length} + ${titles.length}");
+      });
+
+    }).catchError((error, trace) {
+      isError = true;
+      setState(() {});
     });
 
     super.initState();
@@ -72,14 +91,12 @@ class DashboardPageState extends State<DashboardPage> {
 
     final boldWeight = FontWeight.bold;
 
+    if (isError && titles.isEmpty) {
+      return Utils.showFailure();
+    }
+
     return titles.isEmpty
-        ? new Container(
-            width: double.maxFinite,
-            height: double.maxFinite,
-            alignment: Alignment.center,
-            color: Colors.white,
-            child: CircularProgressIndicator(),
-          )
+        ? Utils.showProgress()
         : new Scaffold(
             extendBody: true,
             resizeToAvoidBottomPadding: false,
@@ -143,7 +160,7 @@ class DashboardPageState extends State<DashboardPage> {
                                       Expanded(
                                         flex: 0,
                                         child: Text(
-                                          "${titles[0]}",
+                                          "${otherTitles[0]}",
                                           style: TextStyle(
                                               fontSize: 13,
                                               color: Colors.black54),
@@ -174,7 +191,7 @@ class DashboardPageState extends State<DashboardPage> {
                                       Expanded(
                                         flex: 0,
                                         child: Text(
-                                          "Total ${titles[1]}",
+                                          "Total ${otherTitles[1]}",
                                           style: TextStyle(
                                               fontSize: 13,
                                               color: Colors.black54),
@@ -226,7 +243,18 @@ class DashboardPageState extends State<DashboardPage> {
                       // Generate 100 widgets that display their index in the List.
                       children: List.generate(2, (index) {
                         return Container(
-                          child: Card(
+                          decoration: BoxDecoration(borderRadius:BorderRadius.all(Radius.circular(10))),
+                          margin: EdgeInsets.only(right: 5, left: 5),
+                          child: RaisedButton(
+                            onPressed: (){
+                              if(index ==0){
+                                //Take questionare
+                                Questionaire.start(context, _appPreference);
+                              }else if(index ==1){
+                                launch("tel://+23480097000010");
+                                print("HELELLELELELELLE");
+                              }
+                            },
                             child: Center(
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
@@ -282,63 +310,59 @@ class DashboardPageState extends State<DashboardPage> {
                   child: Padding(
                     padding: EdgeInsets.only(left: 10, right: 10),
                     child: ListView.builder(
-                      itemBuilder: (context, index) => index < 3
-                          ? Container()
-                          : Card(
-                              color: int.parse(count[index]) > 0
-                                  ? Colors.red
-                                  : Colors.blueGrey,
-                              elevation: 2,
-                              child: Padding(
-                                padding: EdgeInsets.all(20),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.max,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: <Widget>[
-                                    Expanded(
-                                      flex: 0,
-                                      child: Icon(
-                                        Icons.local_hospital,
-                                        size: 30,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    Container(
-                                      width: 1,
-                                      color: Colors.white,
-                                      height: 30,
-                                      margin:
-                                          EdgeInsets.only(left: 16, right: 16),
-                                    ),
-                                    Expanded(
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text(
-                                            titles[index],
-                                            style: TextStyle(
-                                                fontSize: 17,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Padding(padding: EdgeInsets.all(2)),
-                                          Text(
-                                              "Infected persons: ${count[index].trim()}",
-                                              style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.white70))
-                                        ],
-                                      ),
-                                    )
-                                  ],
+                      itemBuilder: (context, index) => new Card(
+                        color: int.parse(count.sublist(otherTitles.length, count.length)[index]) > 0
+                            ? Colors.red
+                            : Colors.blueGrey,
+                        elevation: 2,
+                        child: Padding(
+                          padding: EdgeInsets.all(20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Expanded(
+                                flex: 0,
+                                child: Icon(
+                                  Icons.local_hospital,
+                                  size: 30,
+                                  color: Colors.white,
                                 ),
                               ),
-                            ),
+                              Container(
+                                width: 1,
+                                color: Colors.white,
+                                height: 30,
+                                margin: EdgeInsets.only(left: 16, right: 16),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      titles[index],
+                                      style: TextStyle(
+                                          fontSize: 17,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Padding(padding: EdgeInsets.all(2)),
+                                    Text(
+                                        "Infected persons: ${count.sublist(otherTitles.length, count.length)[index]
+        .trim()}",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.white70))
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
                       itemCount: titles.length,
                       shrinkWrap: true,
                     ),

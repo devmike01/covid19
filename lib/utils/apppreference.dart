@@ -21,4 +21,14 @@ class AppPreference{
      return Future<String>.value(await _sPrefFuture.then((pref) =>pref.getString
       ('username')));
   }
+
+  Future<String> getAge() async{
+    return Future<String>.value(await _sPrefFuture.then((pref) =>pref.getString
+      ('age')));
+  }
+
+  Future<String> getSex() async{
+    return Future<String>.value(await _sPrefFuture.then((pref) =>pref.getString
+      ('sex')));
+  }
 }

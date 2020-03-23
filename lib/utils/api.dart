@@ -66,3 +66,67 @@ class EvidenceRequest{
     this.choiceId = choiceId;
   }
 }
+
+class DiagnosisResponse{
+
+  Map<String, dynamic> get(){
+    return {
+      "conditions": [],
+      "extras": {},
+      "question": {
+        "explanation": null,
+        "extras": {},
+        "items": [
+          {
+            "choices": [
+              {
+                "id": "present",
+                "label": "Yes"
+              },
+              {
+                "id": "absent",
+                "label": "No"
+              }
+            ],
+            "explanation": null,
+            "id": "s_0",
+            "name": "Fever"
+          },
+          {
+            "choices": [
+              {
+                "id": "present",
+                "label": "Yes"
+              },
+              {
+                "id": "absent",
+                "label": "No"
+              }
+            ],
+            "explanation": null,
+            "id": "s_1",
+            "name": "Cough"
+          },
+          {
+            "choices": [
+              {
+                "id": "present",
+                "label": "Yes"
+              },
+              {
+                "id": "absent",
+                "label": "No"
+              }
+            ],
+            "explanation": "Shortness of breath: When you have trouble breathing and you cannot get enough air into your lungs. Often accompanied by chest tightness, breathlessness or a feeling of suffocation.",
+            "id": "s_2",
+            "name": "Shortness of breath"
+          }
+        ],
+        "text": "Do you have any of the following symptoms? Please only select new symptoms and symptoms that are not related to any chronic disease you may be subject to.",
+        "type": "group_multiple"
+      },
+      "should_stop": false
+    };
+  }
+}

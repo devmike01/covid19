@@ -12,16 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.blueGrey,
       ),
       home: Scaffold(
         body: MyHomePage(title: 'Flutter Demo Home Page'),
@@ -50,7 +41,13 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  String _userName;
+  String _userName, _sex;
+
+  String _age ="1";
+
+  String _radioValue;
+
+  String choice;
 
   String alreadyLogIn;
 
@@ -65,11 +62,30 @@ class _MyHomePageState extends State<MyHomePage> {
     _appPreference.getUsername().then((data){
       alreadyLogIn = data;
       if(data != null) {
-        DashboardPage.start(context, _appPreference);
+        //DashboardPage.start(context, _appPreference);
       }
       setState(() {});
     });
     super.initState();
+  }
+
+
+
+  void radioButtonChanges(String value) {
+    setState(() {
+      _radioValue = value;
+      switch (value) {
+        case 'male':
+          choice = value;
+          break;
+        case 'female':
+          choice = value;
+          break;
+        default:
+          choice = null;
+      }
+      debugPrint(choice); //Debug the choice in console
+    });
   }
 
   @override
@@ -110,14 +126,58 @@ class _MyHomePageState extends State<MyHomePage> {
                                   suffixIcon: Icon(Icons.person_outline),
                                   hintText: 'Enter your name'),
                             ),
-                          )),
+                          )
+                      ),
+                      Padding(padding: EdgeInsets.only(bottom: 20)),
+                      new Flexible(
+                          flex:0,
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 20, right: 20),
+                            child: TextField(
+                              keyboardType: TextInputType.number,
+                              maxLines: 1,
+                              onChanged: (text){
+                                setState(() {
+                                  this._age = text;
+                                  print("age $_age");
+                                });
+                              },
+                              decoration: InputDecoration(
+                                  suffixIcon: Icon(Icons.cake),
+                                  hintText: "What's your age?"),
+                            ),
+                          )
+                      ),
+                      Padding(padding: EdgeInsets.only(left: 20, bottom: 20)),
+                      new Flexible(
+                          flex:0,
+                          child: Padding(
+                            padding: EdgeInsets.only(right: 20),
+                            child: Row(
+                              children: <Widget>[
+                                Padding(padding: EdgeInsets.only(left: 20)),
+                                Text("Sex:  "),
+                                Radio(value: 'male', groupValue: _radioValue,
+                                    onChanged: radioButtonChanges),
+                                Text("Male"),
+                                Padding(padding: EdgeInsets.only(right: 20)),
+                                Radio(value: 'female', groupValue: _radioValue,
+                                    onChanged: radioButtonChanges),
+                                Text("Female"),
+
+                              ],
+                            )
+                          )
+                      ),
                       Flexible(
                           child: Container(
                             width: double.maxFinite,
                             padding: EdgeInsets.only(top: 20, right: 20, left: 20),
                             child: RaisedButton(
                               onPressed: (_userName == null || _userName.trim().length
-                                  <=2) ? null :  () {
+                                  <=2) || _radioValue == null || int.parse(_age) <
+                                  3 ? null :
+                                  () {
                                 _appPreference.setUsername(_userName.trim());
                                 DashboardPage.start(context, _appPreference);
                               },
@@ -130,7 +190,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ),
                               ),
                             ),
-                          ))
+                          )
+                      )
                     ],
                   )
                   //new Flexible(child: Image.asset("assets/images/doctor_ic.jpg"),)
