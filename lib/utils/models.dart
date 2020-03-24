@@ -1,4 +1,3 @@
-import 'dart:html';
 
 class DiagnosisResponse{
 
@@ -6,26 +5,23 @@ class DiagnosisResponse{
 
   bool shouldStop;
 
-  DiagnosisResponse({this.question, this.shouldStop});
+  List<dynamic> conditions;
+
+  DiagnosisResponse({this.question, this.shouldStop, this.conditions});
 
   bool isShouldStop() => shouldStop;
 
-  void setShouldStop(bool shouldStop){
-    this.shouldStop = shouldStop;
-  }
-
   QuestionResponse getQuestionResponse() => question;
-
-  void setQuestionResponse(QuestionResponse question){
-    this.question = question;
-  }
 
   factory DiagnosisResponse.fromJson(Map<String, dynamic> json) {
     return DiagnosisResponse(
-      question: json['question'],
+      question: QuestionResponse.fromJson(json['question']),
       shouldStop: json['should_stop'],
+        conditions: json['conditions']
     );
   }
+
+
 }
 
 class ChoiceResponse{
@@ -36,12 +32,13 @@ class ChoiceResponse{
 
   String getLabel() => label;
 
-  void setLabel(String label){
-    this.label = label;
-  }
+  ChoiceResponse({this.id, this.label});
 
-  void setId(String id){
-    this.id = id;
+  factory ChoiceResponse.fromJson(Map<String, dynamic> json) {
+    return ChoiceResponse(
+      id: json['id'],
+      label: json['label'],
+    );
   }
 }
 
@@ -55,23 +52,24 @@ class DiagnosisItem{
 
   String name;
 
-  void setExplanation(String explanation){
-    this.explanation = explanation;
-  }
+  bool isSelected =false;
+
 
   String getExplanation() => explanation;
 
   String getId() => id;
-
-  void setId(String id){
-    this.id = id;
-  }
-
-  void setName(String name){
-    this.name = name;
-  }
-
   String getName() => name;
+
+  DiagnosisItem({this.id, this.name, this.explanation, this.choiceResponses});
+
+  factory DiagnosisItem.fromJson(Map<String, dynamic> json) {
+    return DiagnosisItem(
+      id: json['id'],
+      name: json['name'],
+      explanation: json['explanation'],
+      choiceResponses:List.from( json['choices'].map((choices) => ChoiceResponse.fromJson(choices)))
+    );
+  }
 
 }
 
@@ -83,22 +81,49 @@ class QuestionResponse{
 
   List<DiagnosisItem> diagosisItems;
 
+  bool isSelected = false;
 
   List<DiagnosisItem> getDiagnosis() => diagosisItems;
-
-  void setDiagosisItems(List<DiagnosisItem> diagosisItems){
-    this.diagosisItems = diagosisItems;
-  }
 
   String getText() => text;
 
   String getType() => type;
 
-  void setText(String text){
-    this.text = text;
+  QuestionResponse({this.text, this.diagosisItems, this.type});
+
+  factory QuestionResponse.fromJson(Map<String, dynamic> json) {
+    return QuestionResponse(
+        text: json['text'],
+
+        diagosisItems: new List.from(json['items'].map((items) => DiagnosisItem
+            .fromJson(items))),
+        type: json['type']
+
+    );
   }
 
-  void setType(String type){
-    this.type = type;
+
+
+}
+
+
+class EvidenceRequest{
+  String choiceId;
+  String id;
+
+  EvidenceRequest({this.id, this.choiceId});
+
+  String getId() => id;
+
+  String getChoiceId() => choiceId;
+
+  static Map<String, dynamic> toMap(String id, String choiceId){
+    return {
+      'id': id,
+      'choice_id' :choiceId,
+    };
+
   }
+
+
 }

@@ -41,7 +41,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  String _userName, _sex;
+  String _userName;
 
   String _age ="1";
 
@@ -62,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
     _appPreference.getUsername().then((data){
       alreadyLogIn = data;
       if(data != null) {
-        //DashboardPage.start(context, _appPreference);
+        DashboardPage.start(context, _appPreference);
       }
       setState(() {});
     });
@@ -75,10 +75,10 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _radioValue = value;
       switch (value) {
-        case 'male':
+        case 'Male':
           choice = value;
           break;
-        case 'female':
+        case 'Female':
           choice = value;
           break;
         default:
@@ -91,10 +91,10 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
 
-    return  new Container(
+    return new Container(
       width: double.maxFinite,
       height: double.maxFinite,
-      child: Container(
+      child: alreadyLogIn ==null ? Container(): Container(
           color: Colors.white,
           margin: EdgeInsets.only(top: 30),
           child: Stack(
@@ -157,11 +157,11 @@ class _MyHomePageState extends State<MyHomePage> {
                               children: <Widget>[
                                 Padding(padding: EdgeInsets.only(left: 20)),
                                 Text("Sex:  "),
-                                Radio(value: 'male', groupValue: _radioValue,
+                                Radio(value: 'Male', groupValue: _radioValue,
                                     onChanged: radioButtonChanges),
                                 Text("Male"),
                                 Padding(padding: EdgeInsets.only(right: 20)),
-                                Radio(value: 'female', groupValue: _radioValue,
+                                Radio(value: 'Female', groupValue: _radioValue,
                                     onChanged: radioButtonChanges),
                                 Text("Female"),
 
@@ -175,9 +175,11 @@ class _MyHomePageState extends State<MyHomePage> {
                             padding: EdgeInsets.only(top: 20, right: 20, left: 20),
                             child: RaisedButton(
                               onPressed: (_userName == null || _userName.trim().length
-                                  <=2) || _radioValue == null || int.parse(_age) <
+                                  <=2) || choice == null || int.parse(_age) <
                                   3 ? null :
                                   () {
+                                    _appPreference.setSex(choice);
+                                    _appPreference.setAge(_age);
                                 _appPreference.setUsername(_userName.trim());
                                 DashboardPage.start(context, _appPreference);
                               },

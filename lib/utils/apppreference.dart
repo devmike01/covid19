@@ -16,6 +16,22 @@ class AppPreference{
     });
   }
 
+
+  setAge(String age)  {
+    _sPrefFuture.then((spref){
+      spref.setString('age', age);
+      print("age DATA: $age");
+    });
+  }
+
+
+  setSex(String sex)  {
+    _sPrefFuture.then((spref){
+      spref.setString('sex', sex);
+      print("DATA: $sex");
+    });
+  }
+
   Future<String> getUsername() async{
    // String name;
      return Future<String>.value(await _sPrefFuture.then((pref) =>pref.getString

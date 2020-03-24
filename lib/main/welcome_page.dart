@@ -45,6 +45,12 @@ class DashboardPageState extends State<DashboardPage> {
 
   @override
   void initState() {
+    refresh();
+    super.initState();
+  }
+
+
+  void refresh(){
     _appPreference.getUsername().then((data) {
       this._username = data;
     });
@@ -81,8 +87,6 @@ class DashboardPageState extends State<DashboardPage> {
       isError = true;
       setState(() {});
     });
-
-    super.initState();
   }
 
   @override
@@ -92,7 +96,7 @@ class DashboardPageState extends State<DashboardPage> {
     final boldWeight = FontWeight.bold;
 
     if (isError && titles.isEmpty) {
-      return Utils.showFailure();
+      return Utils.showFailure(this);
     }
 
     return titles.isEmpty
@@ -121,10 +125,8 @@ class DashboardPageState extends State<DashboardPage> {
                         Expanded(child: initGreetings(boldWeight, _textSize)),
                         Expanded(
                           flex: 0,
-                          child: new Container(
-                            alignment: Alignment.bottomRight,
+                          child: new InkWell(
                             child: Icon(Icons.settings),
-                            padding: EdgeInsets.only(bottom: 20),
                           ),
                         )
                       ],

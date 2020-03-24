@@ -1,3 +1,4 @@
+import 'package:covid19/main/welcome_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -52,7 +53,7 @@ class Utils {
     );
   }
 
-  static Widget showFailure() {
+  static Widget showFailure(DashboardPageState widget) {
     return new Container(
       width: double.maxFinite,
       height: double.maxFinite,
@@ -79,6 +80,7 @@ class Utils {
               child: RaisedButton(
             child: Text("Try Again", style: TextStyle(color: Colors.white),),
             onPressed: () {
+              widget.refresh();
 
             },color: Colors.blueGrey,
           ))
