@@ -29,11 +29,14 @@ dependencies:
   html: ^0.14.0+3
   url_launcher: ^5.4.2
   statusbar: ^1.1.0
+  floor_generator: ^0.11.0
+  build_runner: ^1.7.3
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  floor: ^0.11.0
 
 
 # For information on the generic Dart part of this file, see the

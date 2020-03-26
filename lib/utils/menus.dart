@@ -43,6 +43,9 @@ class MainMenu {
 }
 
 class Utils {
+
+  static bool isReload = false;
+
   static Widget showProgress() {
     return new Container(
       width: double.maxFinite,
@@ -54,12 +57,13 @@ class Utils {
   }
 
   static Widget showFailure(DashboardPageState widget) {
+    isReload = false;
     return new Container(
       width: double.maxFinite,
       height: double.maxFinite,
       alignment: Alignment.center,
       color: Colors.white,
-      child: Column(
+      child: isReload ? Utils.showProgress() : Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -80,6 +84,7 @@ class Utils {
               child: RaisedButton(
             child: Text("Try Again", style: TextStyle(color: Colors.white),),
             onPressed: () {
+              isReload = true;
               widget.refresh();
 
             },color: Colors.blueGrey,

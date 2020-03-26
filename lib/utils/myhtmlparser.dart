@@ -16,9 +16,8 @@ class HtmlSerializer{
     this.count = count;
   }
 
-  String getCount(){
+  String getCount() {
     return this.count;
   }
-
-
 }
+

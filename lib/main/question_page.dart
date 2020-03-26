@@ -34,37 +34,54 @@ class QuestionairePageState extends State<Questionaire> {
   List<DiagnosisItem> diagosisItems;
   List<Map<String, String>> answers;
   Color itemColor = Colors.blueGrey;
-  List<DiagnosisItem> selectedItems = new List<DiagnosisItem>();
+  String currentCancer;
+  //List<DiagnosisItem> selectedItems = new List<DiagnosisItem>();
   int selectedItem = -1;
-
-  String _sex;
+  List<EvidenceRequest> _answerJson = new List();
+  String _anserValue;
+  String _choice;
+  int _value =1;
+  Map<String, dynamic> selectedMap;
   int _age;
+  List<int> selectedPoses;
+  List<ChoiceResponse> _selectedChoices;
+  //int selectedPos =0;
 
   QuestionairePageState(this._appPreference);
 
   @override
   void initState() {
     answers = new List();
+    selectedMap = new Map();
+    selectedPoses = new List();
+
     _httpApi = new HTTPApi();
-    _loadQuestion();
+
+    _anserValue ="Yes";
+    _loadQuestion([]);
 
     super.initState();
   }
 
-  void _loadQuestion(){
+  void _loadQuestion(List<EvidenceRequest> evidences){
     _appPreference.getAge().then((age) {
       _appPreference.getSex().then((sex) {
-        this._sex = sex;
         this._age = int.parse(age);
         _httpApi
-            .submitDiagnosisQuestion(sex, _age, []).then((response) {
-          this._diagnosisResponse =
-              DiagnosisResponse.fromJson(json.decode(response.body));
-          this._question = _diagnosisResponse.question;
-          this.diagosisItems = _question.diagosisItems;
+            .submitDiagnosisQuestion(sex, _age, evidences).then((response) {
+          setState(() {
 
-          print("hello: ${_diagnosisResponse.question.text}");
-          setState(() {});
+            this._diagnosisResponse =
+                DiagnosisResponse.fromJson(json.decode(response.body));
+            this._question = _diagnosisResponse.question;
+            this.diagosisItems = _question.diagosisItems;
+
+            print("QUUUESTION: ${_question.text}");
+            _selectedChoices = List<ChoiceResponse>.generate(_question.diagosisItems
+                    .length, (index) =>
+            new ChoiceResponse());
+
+          });
         });
       });
     });
@@ -76,8 +93,18 @@ class QuestionairePageState extends State<Questionaire> {
     return new Scaffold(
       extendBodyBehindAppBar: false,
       appBar: AppBar(
+        actions: <Widget>[
+          Expanded(child:
+          FlatButton(onPressed: (){
+            //Move to next question
+
+          }, child: new Text("Skip", style: TextStyle(
+            color: Colors.white,
+          ),)), flex: 0,)
+        ],
         elevation: 5,
         centerTitle: true,
+
         title: Container(
           margin: EdgeInsets.only(top: 50),
           height: 70,
@@ -122,7 +149,7 @@ class QuestionairePageState extends State<Questionaire> {
                   Expanded(
                       flex: 0,
                       child: Text(
-                    _question.text,
+                        _question.text,
                     style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
@@ -141,69 +168,71 @@ class QuestionairePageState extends State<Questionaire> {
                         margin: EdgeInsets.only(top: 40),
                     child: ListView.builder(
                       itemBuilder: (context, index) {
-                        return  InkWell(
-                          onTap: (){
-                            if(_diagnosisResponse.shouldStop){
-                              final answer = EvidenceRequest.toMap
-                                (diagosisItems[index].id,
-                                  diagosisItems[index].choiceResponses[0].id);
-                              answers.add(answer);
-                              if( _age > 0) {
-                                _httpApi.submitTriage(_sex, _age, answers).then((response) {
-                                  Navigator.pop(context);
-                                }).catchError((error){
-                                  //Utils.s
-                                  print(error);
-                                });
-                              }
-                            }else if(_question.type =="group_multiple"){
-                              //Multiple selection
-                              diagosisItems[index].isSelected = !diagosisItems[index].isSelected;
-                              if(!selectedItems.contains(diagosisItems[index])) {
-                                selectedItems.add(diagosisItems[index]);
-                              }else{
-                                selectedItems.remove(diagosisItems[index]);
-                              }
-                            }else{
-                              //Load nest question
-                              _loadQuestion();
-                            }
-
-                            print("RESULT: ${selectedItems.length}");
-                            setState(() { });
-
-                          },
-                          child: new Card(
-                              color:  diagosisItems[index].isSelected ?Colors.red: Colors.blueGrey,
-                              margin: EdgeInsets.all(15),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
-                              elevation: 5,
-                              child: Padding(padding: EdgeInsets.all(20),
-                                child: Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      flex:0,
-                                      child: Icon(Icons.question_answer, color: Colors.white70,),
-                                    ),
-                                    Padding(padding: EdgeInsets.all(10)),
-                                    Expanded(
-                                        child: Text(diagosisItems[index].name,
-                                          style: TextStyle(fontSize: 21,
-                                              fontWeight: FontWeight.bold, color:
-                                              Colors.white),)),
-                                  ],
-                                ),)
+                        _answerJson.clear();
+                        return Container(
+                          width: double.maxFinite,
+                          height: 80,
+                          child: new Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.max,
+                            children: <Widget>[
+                              Expanded(flex: 0, child: Text(_question
+                                  .diagosisItems[index].name)),
+                              Expanded(flex: 0, child: getAnswerTile(index))
+                            ],
                           ),
                         );
                       },
                       itemCount: diagosisItems.length,
                     ),
-                  ))
+                  )),
+
                 ],
               ),
             )),
     );
   }
+
+  void onAnswerValueChanged(String value){
+    print("FIND_VALUE: $value");
+    setState(() {
+      this._anserValue = value;
+      switch(value){
+        case 'No':
+          _choice = value;
+          break;
+        case 'Yes':
+          _choice = value;
+          break;
+      }
+
+      debugPrint("CHOICE $_choice");
+    });
+  }
+
+  Widget getAnswerTile(int pos) {
+    final item = _question.diagosisItems[pos];
+    final choices = item.choiceResponses;
+    return Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: choices.map((e) {
+          return Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: ChoiceChip(
+              label: Text(e.getLabel(), style: TextStyle(color:
+              _selectedChoices[pos] == e? Colors.white : Colors.black87 ),),
+              selectedColor: Colors.blueGrey, // The background color for selected chips
+              selected: _selectedChoices[pos] == e,
+              onSelected: (bool selected) {
+                // Is this cip selected?
+                if (selected) {
+                  setState(() => _selectedChoices[pos] = e);
+                }
+              },
+            ),
+          );
+        }).toList());
+  }
+
 }

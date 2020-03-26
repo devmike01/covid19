@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'models.dart';
@@ -17,6 +18,10 @@ class HTTPApi{
 
   Future<http.Response> submitDiagnosisQuestion(String sex, int age,
   List<EvidenceRequest> evidences) {
+    evidences.forEach((v){
+      print("TASSSTK : ${v.id} ${v.choiceId}");
+    });
+
     return http.post(
       EndPoints.COVID_I9_DIAGNOSIS,
       headers: <String, String>{
@@ -27,7 +32,7 @@ class HTTPApi{
       body: jsonEncode(<String, dynamic>{
         'sex': sex.toLowerCase(),
         'age': age,
-        'evidence': evidences
+        'evidence': EvidenceRequest.adapt(evidences)
       }),
     );
   }

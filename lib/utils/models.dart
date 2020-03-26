@@ -1,5 +1,13 @@
 
+//import 'package:floor_generator/value_object/primary_key.dart';
+import 'package:flutter/material.dart';
+import 'package:floor/floor.dart';
+
+@entity
 class DiagnosisResponse{
+
+  @PrimaryKey(autoGenerate: true)
+  final int id =0;
 
   QuestionResponse question;
 
@@ -7,7 +15,8 @@ class DiagnosisResponse{
 
   List<dynamic> conditions;
 
-  DiagnosisResponse({this.question, this.shouldStop, this.conditions});
+  DiagnosisResponse({this.question, this.shouldStop, this
+      .conditions});
 
   bool isShouldStop() => shouldStop;
 
@@ -28,9 +37,14 @@ class ChoiceResponse{
   String id;
   String label;
 
+  bool isChecked = false;
+  int selectedItem =1;
+
   String getId() => id;
 
   String getLabel() => label;
+
+  bool hasChecked() => isChecked;
 
   ChoiceResponse({this.id, this.label});
 
@@ -122,7 +136,25 @@ class EvidenceRequest{
       'id': id,
       'choice_id' :choiceId,
     };
+  }
 
+  static List<Map<String, dynamic>> adapt(List<EvidenceRequest> jsons){
+    final request = List<Map<String, dynamic>>();
+    jsons.forEach((json){
+      final map = {
+        'id': json.id,
+        'choice_id': json.choiceId
+      };
+      request.add(map);
+    });
+    return request;
+  }
+
+  factory EvidenceRequest.fromJson(Map<String, dynamic> json){
+    return EvidenceRequest(
+      id: json['id'],
+      choiceId: json['choice_id']
+    );
   }
 
 
