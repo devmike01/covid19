@@ -1,5 +1,6 @@
 
 //import 'package:floor_generator/value_object/primary_key.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:floor/floor.dart';
 
@@ -23,8 +24,10 @@ class DiagnosisResponse{
   QuestionResponse getQuestionResponse() => question;
 
   factory DiagnosisResponse.fromJson(Map<String, dynamic> json) {
-    return DiagnosisResponse(
-      question: QuestionResponse.fromJson(json['question']),
+    return json['question'] == null? null:  DiagnosisResponse(
+      question: QuestionResponse
+            .fromJson
+        (json['question']),
       shouldStop: json['should_stop'],
         conditions: json['conditions']
     );
@@ -89,7 +92,7 @@ class DiagnosisItem{
 
 class QuestionResponse{
 
-  String text;
+  String text ='';
 
   String type;
 
@@ -108,10 +111,9 @@ class QuestionResponse{
   factory QuestionResponse.fromJson(Map<String, dynamic> json) {
     return QuestionResponse(
         text: json['text'],
-
         diagosisItems: new List.from(json['items'].map((items) => DiagnosisItem
             .fromJson(items))),
-        type: json['type']
+        type: json["type"]
 
     );
   }
@@ -156,6 +158,49 @@ class EvidenceRequest{
       choiceId: json['choice_id']
     );
   }
+}
+
+class TriageResponse{
+
+  String description;
+
+  String label;
+
+  String triageLevel;
+
+  List<SeriousResponse> seriousResponses;
+
+  TriageResponse({this.label, this.description, this.triageLevel, this
+      .seriousResponses});
 
 
+  factory TriageResponse.fromJson(Map<String, dynamic> json){
+
+    return TriageResponse(
+      label: json['label'],
+      description: json['description'],
+      triageLevel: json['triage_level'],
+      seriousResponses: List.from(json['serious'].map((items) =>
+        SeriousResponse.fromJson(items)))
+    );
+  }
+
+}
+
+class SeriousResponse{
+  String commonName;
+  String id;
+  bool isEmergency;
+  String name;
+
+  SeriousResponse({this.id, this.name, this.commonName, this.isEmergency});
+
+  factory SeriousResponse.fromJson(Map<String, dynamic> json){
+    return SeriousResponse(
+    id: json['id'],
+      isEmergency: json['is_emergency'],
+      commonName: json['common_name'],
+      name: json['name']
+    );
+  }
 }

@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:covid19/main/question_page.dart';
+import 'package:covid19/utils/api.dart';
 import 'package:covid19/utils/apppreference.dart';
 import 'package:covid19/utils/menus.dart';
 import 'package:covid19/utils/myhtmlparser.dart';
@@ -37,7 +39,8 @@ class DashboardPageState extends State<DashboardPage> {
   String _username;
   DashboardPageState(this._appPreference);
   List<String> count = new List();
-  final titles = new List();
+  List titles;
+  List<String> htmlResults;
 
   List<String> otherCount = new List();
   final otherTitles = new List();
@@ -46,11 +49,17 @@ class DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
     refresh();
+    _appPreference.getCacheNcdc().then((data){
+
+    });
     super.initState();
   }
 
 
   void refresh(){
+    setState(() {
+      titles = new List();
+    });
     _appPreference.getUsername().then((data) {
       this._username = data;
     });
@@ -67,9 +76,9 @@ class DashboardPageState extends State<DashboardPage> {
       elements.forEach((el) {
         var regex = RegExp("\\d");
         String result = el.text.trim();
+        htmlResults.add(result);
 
         if (Utils.isAState(result)) {
-          print("STATES: $result");
           titles.add(result);
         } else if (regex.hasMatch(result)) {
           count.add(result);
@@ -79,9 +88,9 @@ class DashboardPageState extends State<DashboardPage> {
         // }
       });
 
-      setState(() {
-        print("SIZE##1: ${otherTitles.length} + ${titles.length}");
-      });
+
+      _appPreference.cacheNcdc(jsonEncode(htmlResults));
+
 
     }).catchError((error, trace) {
       isError = true;
@@ -126,7 +135,7 @@ class DashboardPageState extends State<DashboardPage> {
                         Expanded(
                           flex: 0,
                           child: new InkWell(
-                            child: Icon(Icons.settings),
+                            child: Icon(Icons.settings, color: Colors.blueGrey,),
                           ),
                         )
                       ],
@@ -253,8 +262,7 @@ class DashboardPageState extends State<DashboardPage> {
                                 //Take questionare
                                 Questionaire.start(context, _appPreference);
                               }else if(index ==1){
-                                launch("tel://+23480097000010");
-                                print("HELELLELELELELLE");
+                                launch(HTTPApi.NCDC_PHONE);
                               }
                             },
                             child: Center(

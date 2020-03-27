@@ -9,6 +9,7 @@ class HTTPApi{
 
   static const APP_ID ="b49fdb88";
   static const APP_KEY ="eb2e69a769ded6dd72b86cae0cc0f22c";
+  static const NCDC_PHONE ='tel://+23480097000010';
 
   Map<String, String> get headers => {
     "Content-Type": "application/json",
@@ -18,9 +19,6 @@ class HTTPApi{
 
   Future<http.Response> submitDiagnosisQuestion(String sex, int age,
   List<EvidenceRequest> evidences) {
-    evidences.forEach((v){
-      print("TASSSTK : ${v.id} ${v.choiceId}");
-    });
 
     return http.post(
       EndPoints.COVID_I9_DIAGNOSIS,
@@ -38,18 +36,18 @@ class HTTPApi{
   }
 
   Future<http.Response> submitTriage(String sex, int age,
-      List<Map<String, String>> evidences) {
+      List<EvidenceRequest> evidences) {
     return http.post(
-      EndPoints.COVID_I9_DIAGNOSIS,
+      EndPoints.COVID_19_TRIAGE,
       headers: <String, String>{
         'Content-Type': 'application/json',
         "App-Id": APP_ID,
         "App-Key": APP_KEY
       },
       body: jsonEncode(<String, dynamic>{
-        'sex': sex,
+        'sex': sex.toLowerCase(),
         'age': age,
-        'evidence': evidences
+        'evidence': EvidenceRequest.adapt(evidences)
       }),
     );
   }

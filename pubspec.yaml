@@ -58,3 +58,7 @@ flutter:
     - assets/images/siren_ic.png
     - assets/images/total_discharge_ic.png
     - assets/images/female_doc_ic.jpg
+    - assets/images/iso_call_ic.png
+    - assets/images/no_risk_ic.png
+    - assets/images/quarentine_ic.png
+    - assets/images/self_monitoring_ic.png

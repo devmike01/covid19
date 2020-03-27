@@ -12,15 +12,27 @@ class AppPreference{
   setUsername(String name)  {
     _sPrefFuture.then((spref){
       spref.setString('username', name);
-      print("DATA: $name");
+
     });
+  }
+
+
+  void cacheNcdc(String data){
+    _sPrefFuture.then((spref){
+      spref.setString('NCDC_DATA', data);
+      print(data);
+    });
+  }
+
+  Future<String> getCacheNcdc() async{
+    return Future<String>.value(await _sPrefFuture.then((pref) =>pref.getString
+      ('NCDC_DATA')));
   }
 
 
   setAge(String age)  {
     _sPrefFuture.then((spref){
       spref.setString('age', age);
-      print("age DATA: $age");
     });
   }
 
@@ -28,7 +40,6 @@ class AppPreference{
   setSex(String sex)  {
     _sPrefFuture.then((spref){
       spref.setString('sex', sex);
-      print("DATA: $sex");
     });
   }
 
