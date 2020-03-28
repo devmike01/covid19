@@ -1,7 +1,6 @@
 import 'package:covid19/main/welcome_page.dart';
 import 'package:covid19/utils/models.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -108,17 +107,19 @@ class Utils {
     );
   }
 
-  static Widget showAlert(){
-    return AlertDialog(
-      title: Text('Notice'),
-      content: Text("I'm not a doctor, I'm just a Software Engineer. However,"
-          " the questionaire is based strictly on WHO guidelines"),
+  static void showAlert(BuildContext context, String message, String title){
+    final dialog = AlertDialog(
+      title: Text(title),
+      content: Text(message),
       actions: <Widget>[
         FlatButton(onPressed: (){
-          
+          Navigator.of(context, rootNavigator: true).pop();
         }, child: Text('Got it', style: TextStyle(),))
       ],
     );
+
+    showDialog<void>(context: context, barrierDismissible: false,
+    builder: (BuildContext context) => dialog);
   }
 
   static void showResultOfInterview(

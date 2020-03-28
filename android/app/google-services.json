@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "476117997898",
+    "firebase_url": "https://newagent-54382.firebaseio.com",
+    "project_id": "newagent-54382",
+    "storage_bucket": "newagent-54382.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:476117997898:android:837da6c10d1c2cc70549b3",
+        "android_client_info": {
+          "package_name": "leviapps.com.covid19"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "476117997898-3t2f7e7kforeu0c0uecjj3ifvkgnmdmu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQAbSowjfg4v19afNs1sbHlwJaqXRU8hc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "476117997898-3t2f7e7kforeu0c0uecjj3ifvkgnmdmu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

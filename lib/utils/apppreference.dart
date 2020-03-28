@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppPreference{
@@ -20,7 +19,6 @@ class AppPreference{
   void cacheNcdc(String data){
     _sPrefFuture.then((spref){
       spref.setString('NCDC_DATA', data);
-      print(data);
     });
   }
 

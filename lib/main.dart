@@ -59,6 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
+    alreadyLogIn ='';
     _appPreference.getUsername().then((data){
       alreadyLogIn = data;
       if(data != null) {
@@ -94,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return new Container(
       width: double.maxFinite,
       height: double.maxFinite,
-      child: alreadyLogIn ==null ? Container(): Container(
+      child: alreadyLogIn !=null ? Container(): Container(
           color: Colors.white,
           margin: EdgeInsets.only(top: 30),
           child: Stack(

@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
 class Questionaire extends StatefulWidget {
-  AppPreference _appPreference;
+  final AppPreference _appPreference;
 
   Questionaire(this._appPreference);
 
@@ -56,7 +56,7 @@ class QuestionairePageState extends State<Questionaire> {
   void initState() {
     answers = new List();
     selectedPoses = new List();
-    Utils.showAlert();
+    //Utils.showAlert(context);
     _httpApi = new HTTPApi();
 
     _loadQuestion([]);

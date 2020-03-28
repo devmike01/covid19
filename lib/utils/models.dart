@@ -1,7 +1,5 @@
 
 //import 'package:floor_generator/value_object/primary_key.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:floor/floor.dart';
 
 @entity
