@@ -1,10 +1,16 @@
 # covid19
 
-A new Flutter app that monitors the statistics of people infected with COVID19 by states in Nigeria.
+A Flutter app that monitors the statistics of people infected with COVID19 by states in Nigeria.
 
-<img align="left" src="https://github.com/devmike01/covid19/blob/master/login.png" width="280" height="400">
-<img align="left" src="https://github.com/devmike01/covid19/blob/master/covid19app.jpg" width="280" height="400">
-<img src="https://github.com/devmike01/covid19/blob/master/EUSA5c7XYA8LXUx.jpg" width="280" height="400">
+### Features
+- Statistics by state
+- Diagnotic questionaire
+- Total number of infected and discharged persons
+- Color indicator for states with infected persons
+
+<img align="left" src="https://github.com/devmike01/covid19/blob/master/login.png" width="220" height="400">
+<img align="left" src="https://github.com/devmike01/covid19/blob/master/covid19app.jpg" width="240" height="400">
+<img src="https://github.com/devmike01/covid19/blob/master/EUSA5c7XYA8LXUx.jpg" width="240" height="400">
 
 
 ## Getting Started
