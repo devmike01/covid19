@@ -1,6 +1,8 @@
 # covid19
 
-A new Flutter application.
+A new Flutter app that monitors the statistics of people infected with COVID19 by states in Nigeria.
+
+<img src="https://github.com/devmike01/covid19/blob/master/login.png" width="400" height="790">
 
 ## Getting Started
 
