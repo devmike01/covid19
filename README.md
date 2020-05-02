@@ -8,10 +8,14 @@ A Flutter app that monitors the statistics of people infected with COVID19 by st
 - Total number of infected and discharged persons
 - Color indicator for states with infected persons
 
-<img align="left" src="https://github.com/devmike01/covid19/blob/master/login.png" width="220" height="400">
-<img align="left" src="https://github.com/devmike01/covid19/blob/master/covid19app.jpg" width="240" height="400">
-<img src="https://github.com/devmike01/covid19/blob/master/EUSA5c7XYA8LXUx.jpg" width="240" height="400">
+### Screenshots
+<img align="left" src="https://github.com/devmike01/covid19/blob/master/login.png" width="220" height="400"/>
+<img align="left" src="https://github.com/devmike01/covid19/blob/master/covid19app.jpg" width="240" height="400"/>
+<img src="https://github.com/devmike01/covid19/blob/master/EUSA5c7XYA8LXUx.jpg" width="240" height="400"/>
 
+
+### Download:
+[https://t.co/lcmQXnqSnf?amp=1](https://t.co/lcmQXnqSnf?amp=1)
 
 ## Getting Started
 
