@@ -6,8 +6,8 @@ import 'models.dart';
 
 class HTTPApi{
 
-  static const APP_ID ="b49fdb88";
-  static const APP_KEY ="eb2e69a769ded6dd72b86cae0cc0f22c";
+  static const APP_ID ="APP_ID";
+  static const APP_KEY ="API_KEY;
   static const NCDC_PHONE ='tel://+23480097000010';
 
   Map<String, String> get headers => {
