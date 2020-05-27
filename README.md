@@ -9,7 +9,7 @@ A Flutter app that monitors the statistics of people infected with COVID19 by st
 - Color indicator for states with infected persons
 
 ### Screenshots
-<img align="left" src="https://github.com/devmike01/covid19/blob/master/login.png" width="250" height="450"/>
+<img align="left" src="https://github.com/devmike01/covid19/blob/master/login.png" width="220" height="450"/>
 <img align="left" src="https://github.com/devmike01/covid19/blob/master/covid19app.jpg" width="250" height="450"/>
 <img src="https://github.com/devmike01/covid19/blob/master/EUSA5c7XYA8LXUx.jpg" width="250" height="450"/>
 
